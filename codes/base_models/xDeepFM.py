@@ -38,9 +38,9 @@ def build_input_layers(feature_columns):
     dense_input_dict, sparse_input_dict = {}, {}
     for fc in feature_columns:
         if isinstance(fc, SparseFeat):
-            sparse_input_dict[fc.name] = Input(shape=(1, ), name=fc.name, dtype=fc.dtype)
+            sparse_input_dict[fc.name] = Input(shape=(1, ), name=fc.name, dtype='float32')
         elif isinstance(fc, DenseFeat):
-            dense_input_dict[fc.name] = Input(shape=(fc.dimension, ), name=fc.name, dtype=fc.dtype)
+            dense_input_dict[fc.name] = Input(shape=(fc.dimension, ), name=fc.name, dtype='float32')
     return dense_input_dict, sparse_input_dict
 
 # 构建embedding层
@@ -252,7 +252,7 @@ def xDeepFM(linear_feature_columns, dnn_feature_columns, cin_size=[128, 128]):
 
 if __name__ == "__main__":
     # 读取数据
-    data = pd.read_csv('d:\\文件\\Fun-Rec\\codes\\base_models\\data\\criteo_sample.txt')
+    data = pd.read_csv('d:\\File\\Fun_Rec\\codes\\base_models\\data\\criteo_sample.txt')
 
     # 划分dense和sparse特征
     columns = data.columns.values
@@ -283,4 +283,4 @@ if __name__ == "__main__":
     train_model_input = {name: data[name] for name in dense_features + sparse_features}
     # 模型训练
     model.fit(train_model_input, train_data['label'].values,
-            batch_size=64, epochs=5, validation_split=0.2, )
+            batch_size=64, epochs=100, validation_split=0.2, )
