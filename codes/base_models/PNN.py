@@ -7,8 +7,8 @@ from tqdm import tqdm
 from collections import namedtuple
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
-from tensorflow.keras.models import *
+from tensorflow.python.keras.layers import *
+from tensorflow.python.keras.models import *
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import  MinMaxScaler, LabelEncoder

@@ -5,9 +5,9 @@ import warnings, random, math, os
 from collections import namedtuple, OrderedDict
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
-from tensorflow.keras.models import *
-import tensorflow.keras.backend as K
+from tensorflow.python.keras.layers import *
+from tensorflow.python.keras.models import *
+import tensorflow.python.keras.backend as K
 from tensorflow.python.keras.initializers import (Zeros, glorot_normal,
                                                   glorot_uniform)
 
@@ -252,7 +252,7 @@ def xDeepFM(linear_feature_columns, dnn_feature_columns, cin_size=[128, 128]):
 
 if __name__ == "__main__":
     # 读取数据
-    data = pd.read_csv('../data/criteo_sample.txt')
+    data = pd.read_csv('d:\\文件\\Fun-Rec\\codes\\base_models\\data\\criteo_sample.txt')
 
     # 划分dense和sparse特征
     columns = data.columns.values
