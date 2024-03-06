@@ -12,6 +12,7 @@ from tensorflow.keras.models import *
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import  MinMaxScaler, LabelEncoder
+from tensorflow_privacy.privacy.optimizers.dp_optimizer import DPAdamOptimizer
 
 from utils import SparseFeat, DenseFeat, VarLenSparseFeat
 
@@ -93,7 +94,7 @@ def NCF(dnn_feature_columns):
 if __name__ == "__main__":
     # 读取数据，NCF使用的特征只有user_id和item_id
     rnames = ['user_id','movie_id','rating','timestamp']
-    data = pd.read_csv('./data/ml-1m/ratings.dat', sep='::', engine='python', names=rnames)
+    data = pd.read_csv('d:\\File\\Fun_rec\\codes\\base_models\\data\\ml-1m\\ratings.dat', sep='::', engine='python', names=rnames)
 
     lbe = LabelEncoder()
     data['user_id'] = lbe.fit_transform(data['user_id'])
@@ -108,9 +109,21 @@ if __name__ == "__main__":
     # 构建FM模型
     history = NCF(dnn_feature_columns)
     history.summary()
+
     # 因为数据目前只有用户点击的数据，没有用户未点击的movie，所以这里不能用于做ctr预估
     # 如果需要做ctr预估需要给用户点击和未点击的movie打标签，这里就先预测用户评分
-    history.compile(optimizer="adam", loss="mse", metrics=['mae'])
+
+    # 原来的代码
+    # history.compile(optimizer="adam", loss="mse", metrics=['mae'])
+
+    # 修改后的代码
+    dp_optimizer = DPAdamOptimizer(
+        l2_norm_clip=1.0,
+        noise_multiplier=1.1,
+        num_microbatches=256
+    )
+
+    history.compile(optimizer=dp_optimizer, loss="mse", metrics=['mae'])
 
     # 将输入数据转化成字典的形式输入
     # 将数据转换成字典的形式，用于Input()层对应
@@ -118,4 +131,4 @@ if __name__ == "__main__":
     
     # 模型训练
     history.fit(train_model_input, train_data['label'].values,
-            batch_size=32, epochs=2, validation_split=0.2, )
+            batch_size=32, epochs=3, validation_split=0.2, )
