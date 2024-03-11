@@ -12,7 +12,6 @@ from tensorflow.keras.models import *
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import  MinMaxScaler, LabelEncoder
-from tensorflow_privacy.privacy.optimizers.dp_optimizer import DPAdamOptimizer
 
 from utils import SparseFeat, DenseFeat, VarLenSparseFeat
 
@@ -114,18 +113,7 @@ if __name__ == "__main__":
 
     # 因为数据目前只有用户点击的数据，没有用户未点击的movie，所以这里不能用于做ctr预估
     # 如果需要做ctr预估需要给用户点击和未点击的movie打标签，这里就先预测用户评分
-
-    # 原来的代码
-    # history.compile(optimizer="adam", loss="mse", metrics=['mae'])
-
-    # 修改后的代码
-    dp_optimizer = DPAdamOptimizer(
-        l2_norm_clip=1.0,
-        noise_multiplier=1.1,
-        num_microbatches=256
-    )
-
-    history.compile(optimizer=dp_optimizer, loss="mse", metrics=['mae'])
+    history.compile(optimizer="adam", loss="mse", metrics=['mae'])
 
     # 将输入数据转化成字典的形式输入
     # 将数据转换成字典的形式，用于Input()层对应
